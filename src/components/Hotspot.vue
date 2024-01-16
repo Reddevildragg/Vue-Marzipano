@@ -1,5 +1,8 @@
 <template>
-  <div class="hotspot" @click="handleClick">{{ text }}</div>
+  <div class="hotspot" @click="handleClick">
+    test world
+    <slot></slot>
+  </div>
 </template>
 
 <script setup lang="ts">

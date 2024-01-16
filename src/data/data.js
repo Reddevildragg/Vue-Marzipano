@@ -22,6 +22,7 @@ export const data = {
             },
             "linkHotspots": [
                 {
+                    "id": 2,
                     "yaw": 2.3432478663489595,
                     "pitch": -0.011387538498556893,
                     "rotation": 6.283185307179586,
@@ -59,6 +60,7 @@ export const data = {
             },
             "linkHotspots": [
                 {
+                    "id": 1,
                     "yaw": 0.09040434572636968,
                     "pitch": 0.0978033280921693,
                     "rotation": 0,

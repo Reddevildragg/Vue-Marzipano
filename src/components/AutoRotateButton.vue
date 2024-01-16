@@ -40,13 +40,13 @@ function startAutorotate() {
 /*  if (!autorotateToggleElement.value.classList.contains('enabled')) {
     return;
   }*/
-  viewer.value.startMovement(autorotate);
-  viewer.value.setIdleMovement(3000, autorotate);
+  viewer?.startMovement(autorotate);
+  viewer?.setIdleMovement(3000, autorotate);
 }
 
 function stopAutorotate() {
-  viewer.value.stopMovement();
-  viewer.value.setIdleMovement(Infinity);
+  viewer?.stopMovement();
+  viewer?.setIdleMovement(Infinity);
 }
 
 function toggleAutorotate() {
