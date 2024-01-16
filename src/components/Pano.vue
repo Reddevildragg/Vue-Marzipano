@@ -3,14 +3,8 @@
     <TitleBar :current-scene="currentScene"/>
 
     <scene-list :current-scene="currentScene"/>
+
   </div>
-
-
-
-  <a id="autorotateToggle" ref="autorotateToggleElement">
-    <img class="icon off" src="@/assets/img/play.png">
-    <img class="icon on" src="@/assets/img/pause.png">
-  </a>
 
   <a id="fullscreenToggle" ref="fullscreenToggleElement">
     <img class="icon off" src="@/assets/img/fullscreen.png">
@@ -103,14 +97,6 @@ onMounted(() => {
     };
   });
 
-// Set up autorotate, if enabled.
-  if (data.settings.autorotateEnabled) {
-    autorotateToggleElement.value.classList.add('enabled');
-  }
-
-// Set handler for autorotate toggle.
-  autorotateToggleElement.value.addEventListener('click', toggleAutorotate);
-
   /*// Set up fullscreen mode, if supported.
   if (screenfull.enabled && data.settings.fullscreenButton) {
     document.body.classList.add('fullscreen-enabled');
@@ -127,9 +113,6 @@ onMounted(() => {
   } else {
     document.body.classList.add('fullscreen-disabled');
   }*/
-
-// Set handler for scene list toggle.
-  sceneListToggleElement.value.addEventListener('click', toggleSceneList);
 
 // Start with the scene list open on desktop.
 /*  if (!document.body.classList.contains('mobile')) {
@@ -153,52 +136,10 @@ onMounted(() => {
   switchScene(scenes.value[0]);
 })
 
-
-
 function switchScene(scene) {
-  stopAutorotate();
   scene.view.setParameters(scene.data.initialViewParameters);
   scene.scene.switchTo();
-  startAutorotate();
   currentScene.value = scene;
-}
-
-function showSceneList() {
-  sceneListElement.value.classList.add('enabled');
-  sceneListToggleElement.value.classList.add('enabled');
-}
-
-function hideSceneList() {
-  sceneListElement.value.classList.remove('enabled');
-  sceneListToggleElement.value.classList.remove('enabled');
-}
-
-function toggleSceneList() {
-  sceneListElement.value.classList.toggle('enabled');
-  sceneListToggleElement.value.classList.toggle('enabled');
-}
-
-function startAutorotate() {
-  if (!autorotateToggleElement.value.classList.contains('enabled')) {
-    return;
-  }
-  viewer.startMovement(autorotate);
-  viewer.setIdleMovement(3000, autorotate);
-}
-
-function stopAutorotate() {
-  viewer.stopMovement();
-  viewer.setIdleMovement(Infinity);
-}
-
-function toggleAutorotate() {
-  if (autorotateToggleElement.value.classList.contains('enabled')) {
-    autorotateToggleElement.value.classList.remove('enabled');
-    stopAutorotate();
-  } else {
-    autorotateToggleElement.value.classList.add('enabled');
-    startAutorotate();
-  }
 }
 
 function createLinkHotspotElement(hotspot) {
