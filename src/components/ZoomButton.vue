@@ -35,7 +35,7 @@ function zoom() {
 <style scoped>
 .zoomButton
 {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 </style>

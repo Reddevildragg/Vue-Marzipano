@@ -46,7 +46,7 @@ function navigate()
 <style scoped>
 .navigationButton
 {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 </style>
