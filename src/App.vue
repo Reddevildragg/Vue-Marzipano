@@ -1,5 +1,8 @@
 <template>
-  <pano/>
+  <div class="w-100 h-100">
+    <pano/>
+  </div>
+
 </template>
 
 <script setup lang="ts">

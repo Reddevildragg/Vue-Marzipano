@@ -1,7 +1,6 @@
 <template>
   <div class="hotspot" @click="handleClick">
-    test world
-    <slot></slot>
+    <img class="w-100 h-100 cursor-pointer" src="@/assets/img/link.png">
   </div>
 </template>
 
@@ -18,11 +17,9 @@ const handleClick = () => {
 
 <style scoped lang="scss">
 .hotspot {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  margin-top: -30px;
 }
 </style>

@@ -12,6 +12,7 @@ const props = defineProps({
   currentScene: Object,
 })
 
+
 const autorotate = Marzipano.autorotate({
   yawSpeed: 0.03,
   targetPitch: 0,

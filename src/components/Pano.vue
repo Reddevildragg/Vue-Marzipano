@@ -2,24 +2,23 @@
   <div ref="panoElement" class="pano">
     <TitleBar :current-scene="currentScene"/>
 
-    <scene-list :current-scene="currentScene"/>
+    <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
 
-    <auto-rotate-button :current-scene="currentScene"/>
+<!--    <auto-rotate-button :current-scene="currentScene"/>-->
 
     <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
-             @click="switchScene(findSceneById(hotspot.target))">poke poke
-    </Hotspot>
+             @click="switchScene(findSceneById(hotspot.target))"/>
   </div>
+  <!--
+    <a id="fullscreenToggle" ref="fullscreenToggleElement">
+      <img class="icon off" src="@/assets/img/fullscreen.png">
+      <img class="icon on" src="@/assets/img/windowed.png">
+    </a>
 
-  <a id="fullscreenToggle" ref="fullscreenToggleElement">
-    <img class="icon off" src="@/assets/img/fullscreen.png">
-    <img class="icon on" src="@/assets/img/windowed.png">
-  </a>
-
-  <a id="sceneListToggle" ref="sceneListToggleElement">
-    <img class="icon off" src="@/assets/img/expand.png">
-    <img class="icon on" src="@/assets/img/collapse.png">
-  </a>
+    <a id="sceneListToggle" ref="sceneListToggleElement">
+      <img class="icon off" src="@/assets/img/expand.png">
+      <img class="icon on" src="@/assets/img/collapse.png">
+    </a>-->
 
 </template>
 
@@ -85,9 +84,9 @@ onMounted(() => {
     allHotspots.value.push(sceneData.linkHotspots);
     allHotspots.value = allHotspots.value.flat();
 
+    //wait for all the divs to load on the next tick
     nextTick(() => {
       sceneData.linkHotspots.forEach(x => {
-        console.log(document.getElementById(x.id));
         createdScene.hotspotContainer().createHotspot(document.getElementById(x.id), {yaw: 0.5, pitch: 0.5});
       })
     })
@@ -97,8 +96,7 @@ onMounted(() => {
       scene: createdScene,
       view: view
     };
-  })
-  ;
+  });
 
 // Display the initial scene.
   switchScene(scenes.value[0]);
@@ -128,5 +126,15 @@ function findSceneDataById(id) {
   return null;
 }
 </script>
+
+<style>
+.pano {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
