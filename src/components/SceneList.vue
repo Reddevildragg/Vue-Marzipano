@@ -4,14 +4,13 @@
     <img v-else class="w-100 h-100 cursor-pointer" src="@/assets/img/collapse.png">
   </div>
 
-  <div class="sceneList" v-if="isOpen">
-    <ul class="scenes">
-      <a v-for="item in data.scenes" :key="item.id" class="scene cursor-pointer" :data-id="item.id"
+  <ul class="sceneList p-0" v-if="isOpen">
+      <li v-for="item in data.scenes" :key="item.id" class="scene p-3 cursor-pointer d-flex align-content-center" :data-id="item.id"
          :class="{current : currentScene?.data.id === item.id}" @click="handleClick(item)">
-        <li class="text">{{ item.name }}</li>
-      </a>
-    </ul>
-  </div>
+        <div class="text pe-5">{{ item.name }}</div>
+        <img v-if="currentScene?.data.id === item.id" class="align-self-center" style="height: 20px" src="@/assets/img/eye-regular.svg"/>
+      </li>
+  </ul>
 
 </template>
 
@@ -30,16 +29,6 @@ const handleClick = (item) => {
   // Emit a custom event named 'custom-click' with optional payload
   emits('select-scene', item);
 };
-
-function showSceneList() {
-  //sceneListElement.value.classList.add('enabled');
-  //sceneListToggleElement.value.classList.add('enabled');
-}
-
-function hideSceneList() {
-  //sceneListElement.value.classList.remove('enabled');
-  //sceneListToggleElement.value.classList.remove('enabled');
-}
 
 function toggleSceneList() {
   isOpen.value = !isOpen.value
@@ -66,17 +55,16 @@ function toggleSceneList() {
   position: absolute;
   top: 40px;
   left: 0;
-  padding: 5px;
-  background-color: rgb(103, 115, 131);
-  background-color: rgba(103, 115, 131, 0.8);
+  list-style: none; /* Remove numbers */
 
-  .scenes
+  .scene
   {
-    padding: 5px;
+    background-color: white;
+    opacity: 0.7;
 
-    .scene
+    &.current
     {
-
+      opacity: 1;
     }
   }
 }

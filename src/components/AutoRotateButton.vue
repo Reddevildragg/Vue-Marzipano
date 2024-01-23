@@ -1,62 +1,90 @@
 <template>
-  <a id="autorotateToggle" ref="autorotateToggleElement">
-    <img class="icon off" src="@/assets/img/play.png">
-    <img class="icon on" src="@/assets/img/pause.png">
+  <a class="autorotateToggle" @click="toggle">
+    <img v-if="!enableAutoRotate" class="w-100 h-100" src="@/assets/img/play.png">
+    <img v-else class="w-100 h-100" src="@/assets/img/pause.png">
   </a>
 </template>
 <script setup>
 import Marzipano from "marzipano";
-import {inject, onMounted, watch} from "vue";
+import {inject, onMounted, ref, watch} from "vue";
 
 const props = defineProps({
   currentScene: Object,
 })
 
-
-const autorotate = Marzipano.autorotate({
-  yawSpeed: 0.03,
-  targetPitch: 0,
-  targetFov: Math.PI / 2
-});
-
-const data = inject('data')
 const viewer = inject('viewer')
+
+const enableAutoRotate = inject('enableAutoRotate')
+const autorotateSettings = inject('autorotateSettings')
+
 onMounted(() =>
 {
-  // Set up autorotate, if enabled.
-  if (data.settings.autorotateEnabled) {
-    //autorotateToggleElement.value.classList.add('enabled');
-  }
-
-  // Set handler for autorotate toggle.
-  //autorotateToggleElement.value.addEventListener('click', toggleAutorotate);
+  Set(enableAutoRotate)
 })
+
+function Set(state)
+{
+  enableAutoRotate.value = state
+  if (enableAutoRotate.value)
+  {
+    startAutorotate();
+  }
+  else
+  {
+    stopAutorotate()
+  }
+}
+
+function toggle()
+{
+  enableAutoRotate.value = !enableAutoRotate.value
+
+  if (enableAutoRotate.value)
+  {
+    startAutorotate();
+  }
+  else
+  {
+    stopAutorotate()
+  }
+}
+
+watch(() => enableAutoRotate.value, (newVal, oldVal) => {
+Set(enableAutoRotate.value)
+});
 
 watch(() => props.currentScene, (newVal, oldVal) => {
   stopAutorotate()
   startAutorotate()
 });
 
-function startAutorotate() {
-/*  if (!autorotateToggleElement.value.classList.contains('enabled')) {
+function startAutorotate()
+{
+  if (!enableAutoRotate.value) {
     return;
-  }*/
-  viewer?.startMovement(autorotate);
-  viewer?.setIdleMovement(3000, autorotate);
+  }
+  viewer.value?.startMovement(autorotateSettings);
+  viewer.value?.setIdleMovement(3000, autorotateSettings);
 }
 
 function stopAutorotate() {
-  viewer?.stopMovement();
-  viewer?.setIdleMovement(Infinity);
+  viewer.value?.stopMovement();
+  viewer.value?.setIdleMovement(Infinity);
 }
 
-function toggleAutorotate() {
-  if (autorotateToggleElement.value.classList.contains('enabled')) {
-    autorotateToggleElement.value.classList.remove('enabled');
-    stopAutorotate();
-  } else {
-    autorotateToggleElement.value.classList.add('enabled');
-    startAutorotate();
-  }
-}
 </script>
+
+<style>
+.autorotateToggle
+{
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  background-color: rgb(103, 115, 131);
+  background-color: rgba(103, 115, 131, 0.8);
+}
+</style>

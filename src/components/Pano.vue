@@ -4,49 +4,58 @@
 
     <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
 
-<!--    <auto-rotate-button :current-scene="currentScene"/>-->
+    <auto-rotate-button :current-scene="currentScene"/>
 
     <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
              @click="switchScene(findSceneById(hotspot.target))"/>
+
+    <content-buttons>
+      <zoom-button class="m-2" :factor="0.8" image="assets/img/plus.png" @zoom-clicked="navButtonClicked"/>
+      <zoom-button class="m-2" :factor="1.2" image="assets/img/minus.png" @zoom-clicked="navButtonClicked"/>
+
+      <navigate-button class="m-2" :x-factor="-10" image="assets/img/left.png" @zoom-clicked="navButtonClicked"/>
+      <navigate-button class="m-2" :x-factor="10" image="assets/img/right.png" @zoom-clicked="navButtonClicked"/>
+      <navigate-button class="m-2" :y-factor="-10" image="assets/img/up.png" @zoom-clicked="navButtonClicked"/>
+      <navigate-button class="m-2" :y-factor="10" image="assets/img/down.png" @zoom-clicked="navButtonClicked"/>
+    </content-buttons>
   </div>
-  <!--
-    <a id="fullscreenToggle" ref="fullscreenToggleElement">
-      <img class="icon off" src="@/assets/img/fullscreen.png">
-      <img class="icon on" src="@/assets/img/windowed.png">
-    </a>
-
-    <a id="sceneListToggle" ref="sceneListToggleElement">
-      <img class="icon off" src="@/assets/img/expand.png">
-      <img class="icon on" src="@/assets/img/collapse.png">
-    </a>-->
-
 </template>
 
 <script setup>
 import Marzipano from "marzipano";
 import {data} from '../data';
-import {createApp, defineAsyncComponent, nextTick, onMounted, provide, ref} from "vue";
+import {nextTick, onMounted, provide, ref} from "vue";
 import SceneList from "@/components/SceneList.vue";
 import TitleBar from "@/components/TitleBar.vue";
 import AutoRotateButton from "@/components/AutoRotateButton.vue";
 import Hotspot from "@/components/Hotspot.vue";
+import ContentButtons from "@/components/content-buttons.vue";
+import ZoomButton from "@/components/ZoomButton.vue";
+import NavigateButton from "@/components/NavigateButton.vue";
 
 const bowser = window.bowser;
 
 const panoElement = ref();
 
-const sceneListToggleElement = ref();
-const autorotateToggleElement = ref();
-const fullscreenToggleElement = ref();
+const enableAutoRotate = ref(data.settings.autorotateEnabled);
+const autorotateSettings = Marzipano.autorotate({
+  yawSpeed: 0.03,
+  targetPitch: 0,
+  targetFov: Math.PI / 2
+});
 
-let viewer = undefined;
 
+let viewer = ref();
 const scenes = ref()
 const currentScene = ref();
 
 provide("scenes", scenes);
 provide("data", data);
 provide("viewer", viewer);
+provide("currentScene", currentScene);
+
+provide("enableAutoRotate", enableAutoRotate);
+provide("autorotateSettings", autorotateSettings);
 
 const allHotspots = ref([])
 
@@ -55,13 +64,13 @@ onMounted(() => {
 // Viewer options.
   const viewerOpts = {
     controls: {
-      mouseViewMode: data.settings.mouseViewMode
+      mouseViewMode: data.settings.mouseViewMode,
+      scrollZoom: true,
     }
   };
 
 // Initialize viewer.
-  viewer = new Marzipano.Viewer(panoElement.value, viewerOpts);
-
+  const newViewer = new Marzipano.Viewer(panoElement.value, viewerOpts);
 // Create scenes.
   scenes.value = data.scenes.map(function (sceneData) {
     const urlPrefix = new URL("/tiles", import.meta.url.replace("/@fs", "")).toString();
@@ -71,10 +80,11 @@ onMounted(() => {
 
     const geometry = new Marzipano.CubeGeometry(sceneData.levels);
 
-    const limiter = Marzipano.RectilinearView.limit.traditional(sceneData.faceSize, 100 * Math.PI / 180, 120 * Math.PI / 180);
+    const limiter = Marzipano.RectilinearView.limit.traditional(Math.min(sceneData.faceSize * 8, 4096), 100 * Math.PI / 180, 120 * Math.PI / 180);
     const view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
 
-    const createdScene = viewer.createScene({
+
+    const createdScene = newViewer.createScene({
       source: source,
       geometry: geometry,
       view: view,
@@ -98,6 +108,7 @@ onMounted(() => {
     };
   });
 
+  viewer.value = newViewer
 // Display the initial scene.
   switchScene(scenes.value[0]);
 })
@@ -124,6 +135,11 @@ function findSceneDataById(id) {
     }
   }
   return null;
+}
+
+function navButtonClicked()
+{
+  enableAutoRotate.value = false
 }
 </script>
 
