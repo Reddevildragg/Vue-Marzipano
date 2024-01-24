@@ -16,12 +16,16 @@ function sanitize(s) {
 <style>
 .titleBar
 {
+  z-index: 10;
   position: absolute;
   top: 0;
-  height: 40px;
   width: 100%;
   text-align: center;
   background-color: rgba(58,68,84,0.8);
-  z-index: 2;
+}
+
+.sceneName
+{
+  color: white;
 }
 </style>

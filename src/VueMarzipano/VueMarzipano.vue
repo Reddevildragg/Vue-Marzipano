@@ -1,23 +1,24 @@
 <template>
   <div ref="panoElement" class="pano">
-    <TitleBar :current-scene="currentScene"/>
+      <TitleBar :current-scene="currentScene"/>
 
-    <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
+      <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
 
-    <auto-rotate-button :current-scene="currentScene"/>
+      <auto-rotate-button :current-scene="currentScene"/>
 
-    <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
-             @click="switchScene(findSceneById(hotspot.target))"/>
+      <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
+               @click="switchScene(findSceneById(hotspot.target))"/>
 
-    <content-buttons>
-      <zoom-button class="m-2" :factor="0.8" image="assets/img/plus.png" @zoom-clicked="navButtonClicked"/>
-      <zoom-button class="m-2" :factor="1.2" image="assets/img/minus.png" @zoom-clicked="navButtonClicked"/>
+      <content-buttons>
+        <zoom-button class="m-2" :factor="0.8" image="assets/img/plus.png" @zoom-clicked="navButtonClicked"/>
+        <zoom-button class="m-2" :factor="1.2" image="assets/img/minus.png" @zoom-clicked="navButtonClicked"/>
 
-      <navigate-button class="m-2" :x-factor="-10" image="assets/img/left.png" @zoom-clicked="navButtonClicked"/>
-      <navigate-button class="m-2" :x-factor="10" image="assets/img/right.png" @zoom-clicked="navButtonClicked"/>
-      <navigate-button class="m-2" :y-factor="-10" image="assets/img/up.png" @zoom-clicked="navButtonClicked"/>
-      <navigate-button class="m-2" :y-factor="10" image="assets/img/down.png" @zoom-clicked="navButtonClicked"/>
-    </content-buttons>
+        <navigate-button class="m-2" :x-factor="-10" image="assets/img/left.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :x-factor="10" image="assets/img/right.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :y-factor="-10" image="assets/img/up.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :y-factor="10" image="assets/img/down.png" @zoom-clicked="navButtonClicked"/>
+      </content-buttons>
+
   </div>
 </template>
 
@@ -25,13 +26,13 @@
 import Marzipano from "marzipano";
 import {data} from '../data';
 import {nextTick, onMounted, provide, ref} from "vue";
-import SceneList from "@/components/SceneList.vue";
-import TitleBar from "@/components/TitleBar.vue";
-import AutoRotateButton from "@/components/AutoRotateButton.vue";
-import Hotspot from "@/components/Hotspot.vue";
-import ContentButtons from "@/components/content-buttons.vue";
-import ZoomButton from "@/components/ZoomButton.vue";
-import NavigateButton from "@/components/NavigateButton.vue";
+import SceneList from "@/VueMarzipano/Components/SceneList.vue";
+import TitleBar from "@/VueMarzipano/Components/TitleBar.vue";
+import AutoRotateButton from "@/VueMarzipano/Components/AutoRotateButton.vue";
+import Hotspot from "@/VueMarzipano/Components/Hotspot.vue";
+import ContentButtons from "@/VueMarzipano/Components/content-buttons.vue";
+import ZoomButton from "@/VueMarzipano/Components/ZoomButton.vue";
+import NavigateButton from "@/VueMarzipano/Components/NavigateButton.vue";
 
 const bowser = window.bowser;
 
@@ -143,12 +144,17 @@ function navButtonClicked()
 }
 </script>
 
-<style>
+<style lang="scss">
 .pano {
   position: relative;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
+  > *:not(:nth-last-child(-n+2)) //we exclude the last 2 children as these are the pano components that need to be at the back
+  {
+    z-index: 2;
+  }
 }
 </style>

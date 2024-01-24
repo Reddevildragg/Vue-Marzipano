@@ -1,12 +1,12 @@
 <template>
-  <a class="navigationButton" @click="navigate()">
+  <a class="navigationButton cursor-pointer" @click="navigate()">
     <img  class="w-100 h-100" :src="getImageUrl(props.image)">
   </a>
 </template>
 
 <script setup lang="ts">
 
-import {getImageUrl} from "@/utils.ts";
+import {getImageUrl} from "../utils.ts";
 
 const props = defineProps({
   image:

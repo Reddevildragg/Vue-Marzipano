@@ -4,19 +4,21 @@
     <img v-else class="w-100 h-100 cursor-pointer" src="@/assets/img/collapse.png">
   </div>
 
-  <ul class="sceneList p-0" v-if="isOpen">
-      <li v-for="item in data.scenes" :key="item.id" class="scene p-3 cursor-pointer d-flex align-content-center" :data-id="item.id"
-         :class="{current : currentScene?.data.id === item.id}" @click="handleClick(item)">
-        <div class="text pe-5">{{ item.name }}</div>
-        <img v-if="currentScene?.data.id === item.id" class="align-self-center" style="height: 20px" src="@/assets/img/eye-regular.svg"/>
-      </li>
+  <ul class="sceneList p-0" :class="{open : isOpen}">
+    <li v-for="item in data.scenes" :key="item.id" class="scene p-3 cursor-pointer d-flex align-content-center"
+        :data-id="item.id"
+        :class="{current : currentScene?.data.id === item.id}" @click="handleClick(item)">
+      <div class="text pe-5">{{ item.name }}</div>
+      <img v-if="currentScene?.data.id === item.id" class="align-self-center" style="height: 20px"
+           src="@/assets/img/eye-regular.svg"/>
+    </li>
   </ul>
 
 </template>
 
 <script setup>
 import {data} from "@/data";
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 
 const props = defineProps({
   currentScene: Object,
@@ -34,11 +36,17 @@ function toggleSceneList() {
   isOpen.value = !isOpen.value
 }
 
+const offscreenPosition = computed(() =>
+{
+  // Calculate the offscreen position dynamically based on content size
+  const contentContainer = document.querySelector('.sceneList');
+  return `calc(-${contentContainer.offsetWidth}px - 50px)`;
+})
+
 </script>
 
 <style scoped lang="scss">
 .sceneListToggle {
-  z-index: 5;
   position: absolute;
   top: 0;
   left: 0;
@@ -49,21 +57,23 @@ function toggleSceneList() {
   background-color: rgba(103, 115, 131, 0.8);
 }
 
-.sceneList
-{
+.sceneList {
   z-index: 5;
   position: absolute;
   top: 40px;
-  left: 0;
   list-style: none; /* Remove numbers */
+  left: v-bind(offscreenPosition); /* Default value */
+  transition: left 1s ease; /* Smooth transition when changing the left property */
 
-  .scene
-  {
+  &.open {
+    left: 50px; /* Ending position at 50px from the left */
+  }
+
+  .scene {
     background-color: white;
     opacity: 0.7;
 
-    &.current
-    {
+    &.current {
       opacity: 1;
     }
   }

@@ -1,0 +1,10 @@
+$fonts: (
+        'bienvenue': 'bienvenue',
+        'gamechanger': 'gamechanger',
+);
+
+@each $font, $value in $fonts {
+  .font-#{$font} {
+    font-family: var(--#{$font}) !important;
+  }
+}

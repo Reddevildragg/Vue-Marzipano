@@ -1,5 +1,5 @@
 <template>
-  <a class="autorotateToggle" @click="toggle">
+  <a class="autorotateToggle cursor-pointer" @click="toggle">
     <img v-if="!enableAutoRotate" class="w-100 h-100" src="@/assets/img/play.png">
     <img v-else class="w-100 h-100" src="@/assets/img/pause.png">
   </a>
@@ -77,7 +77,6 @@ function stopAutorotate() {
 <style>
 .autorotateToggle
 {
-  z-index: 5;
   position: absolute;
   top: 0;
   right: 0;

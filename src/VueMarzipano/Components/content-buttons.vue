@@ -15,7 +15,6 @@
 {
   position: absolute;
   bottom: 10%;
-  z-index: 2;
 
   .button-layout
   {
