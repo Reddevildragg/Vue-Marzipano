@@ -1,15 +1,13 @@
 <template>
   <a class="navigationButton cursor-pointer" @click="navigate()">
-    <img  class="w-100 h-100" :src="getImageUrl(props.image)">
+    <img  class="w-100 h-100" :src="useImages().getImageSrc(props.imageName)">
   </a>
 </template>
 
 <script setup lang="ts">
 
-import {getImageUrl} from "../utils.ts";
-
 const props = defineProps({
-  image:
+  imageName:
       {
         type:String
       },
@@ -25,7 +23,8 @@ const props = defineProps({
       },
 })
 
-import {computed, inject} from "vue";
+import {inject} from "vue";
+import {useImages} from "@/VueMarzipano/Composables/ImagesComposable.ts";
 const emits = defineEmits(['zoom-clicked'])
 
 const currentScene = inject('currentScene')

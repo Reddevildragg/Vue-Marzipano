@@ -5,7 +5,6 @@
   </a>
 </template>
 <script setup>
-import Marzipano from "marzipano";
 import {inject, onMounted, ref, watch} from "vue";
 
 const props = defineProps({

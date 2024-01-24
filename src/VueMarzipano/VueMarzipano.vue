@@ -10,13 +10,13 @@
                @click="switchScene(findSceneById(hotspot.target))"/>
 
       <content-buttons>
-        <zoom-button class="m-2" :factor="0.8" image="assets/img/plus.png" @zoom-clicked="navButtonClicked"/>
-        <zoom-button class="m-2" :factor="1.2" image="assets/img/minus.png" @zoom-clicked="navButtonClicked"/>
+        <zoom-button class="m-2" :factor="0.8" imageName="assets/img/plus.png" @zoom-clicked="navButtonClicked"/>
+        <zoom-button class="m-2" :factor="1.2" imageName="assets/img/minus.png" @zoom-clicked="navButtonClicked"/>
 
-        <navigate-button class="m-2" :x-factor="-10" image="assets/img/left.png" @zoom-clicked="navButtonClicked"/>
-        <navigate-button class="m-2" :x-factor="10" image="assets/img/right.png" @zoom-clicked="navButtonClicked"/>
-        <navigate-button class="m-2" :y-factor="-10" image="assets/img/up.png" @zoom-clicked="navButtonClicked"/>
-        <navigate-button class="m-2" :y-factor="10" image="assets/img/down.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :x-factor="-10" imageName="assets/img/left.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :x-factor="10" imageName="assets/img/right.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :y-factor="-10" imageName="assets/img/up.png" @zoom-clicked="navButtonClicked"/>
+        <navigate-button class="m-2" :y-factor="10" imageName="assets/img/down.png" @zoom-clicked="navButtonClicked"/>
       </content-buttons>
 
   </div>
