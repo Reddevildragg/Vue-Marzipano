@@ -1,6 +1,6 @@
 <template>
-  <div class="titleBar">
-    <h1 class="sceneName" ref="sceneNameElement">{{sanitize(currentScene?.data.name)}}</h1>
+  <div class="titleBar d-flex justify-content-center align-items-center">
+    <h1 class="sceneName m-0" ref="sceneNameElement">{{sanitize(currentScene?.data.name)}}</h1>
   </div>
 </template>
 <script setup>
@@ -14,11 +14,16 @@ function sanitize(s) {
 </script>
 
 <style>
+h1
+{
+  font-size: 24px!important;
+}
 .titleBar
 {
   z-index: 10;
   position: absolute;
   top: 0;
+  height: 40px;
   width: 100%;
   text-align: center;
   background-color: rgba(58,68,84,0.8);
