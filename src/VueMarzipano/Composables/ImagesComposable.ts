@@ -1,5 +1,5 @@
 import {computed} from "vue";
-import { filename } from 'pathe/utils';
+import {filename} from 'pathe/utils';
 
 interface ImagesComposable {
     getImageSrc: (fileName: string) => string | undefined;
@@ -10,17 +10,16 @@ function useImages(): ImagesComposable {
     const images = computed(() =>
     {
         const glob =  import.meta.glob("@/assets/*/*.(png|jpeg|svg)", {eager: true})
-        const i = Object.fromEntries(
+        return Object.fromEntries(
             Object.entries(glob).map(([key, value]) => [filename(key), value.default])
         );
-        return i;
     });
 
     const getImageSrc = (fileName: string): string | undefined =>
     {
         return images.value[filename(fileName)]
     };
-    return { getImageSrc, images };
+    return { getImageSrc };
 }
 
 export { useImages };
