@@ -1,6 +1,6 @@
 <template>
   <div class="titleBar d-flex justify-content-center align-items-center">
-    <h1 class="sceneName m-0" ref="sceneNameElement">{{sanitize(currentScene?.data.name)}}</h1>
+    <h1 class="sceneName m-0 font-gamechanger">{{sanitize(currentScene?.data.name)}}</h1>
   </div>
 </template>
 <script setup>
@@ -26,7 +26,7 @@ h1
   height: 40px;
   width: 100%;
   text-align: center;
-  background-color: rgba(58,68,84,0.8);
+  background-color:  rgba(25,45,56,0.8);
 }
 
 .sceneName

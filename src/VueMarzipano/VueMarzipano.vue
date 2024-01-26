@@ -1,23 +1,24 @@
 <template>
   <div ref="panoElement" class="pano">
-      <TitleBar :current-scene="currentScene"/>
+    <TitleBar :current-scene="currentScene"/>
 
-      <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
+    <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
+             @click="switchScene(findSceneById(hotspot.target))"/>
 
-      <auto-rotate-button :current-scene="currentScene"/>
+    <content-buttons>
+      <navigate-button class="p-2" :zoom-factor="0.8" imageName="assets/img/plus.png" @nav-clicked="navButtonClicked"/>
+      <navigate-button class="p-2" :zoom-factor="1.2" imageName="assets/img/minus.png" @nav-clicked="navButtonClicked"/>
 
-      <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
-               @click="switchScene(findSceneById(hotspot.target))"/>
+      <navigate-button class="p-2" :x-factor="-10" imageName="assets/img/left.png" @nav-clicked="navButtonClicked"/>
+      <navigate-button class="p-2" :x-factor="10" imageName="assets/img/right.png" @nav-clicked="navButtonClicked"/>
+      <navigate-button class="p-2" :y-factor="-10" imageName="assets/img/up.png" @nav-clicked="navButtonClicked"/>
+      <navigate-button class="p-2" :y-factor="10" imageName="assets/img/down.png" @nav-clicked="navButtonClicked"/>
 
-      <content-buttons>
-        <zoom-button class="m-2" :factor="0.8" imageName="assets/img/plus.png" @zoom-clicked="navButtonClicked"/>
-        <zoom-button class="m-2" :factor="1.2" imageName="assets/img/minus.png" @zoom-clicked="navButtonClicked"/>
+      <auto-rotate-button class="p-2" :current-scene="currentScene"/>
+    </content-buttons>
 
-        <navigate-button class="m-2" :x-factor="-10" imageName="assets/img/left.png" @zoom-clicked="navButtonClicked"/>
-        <navigate-button class="m-2" :x-factor="10" imageName="assets/img/right.png" @zoom-clicked="navButtonClicked"/>
-        <navigate-button class="m-2" :y-factor="-10" imageName="assets/img/up.png" @zoom-clicked="navButtonClicked"/>
-        <navigate-button class="m-2" :y-factor="10" imageName="assets/img/down.png" @zoom-clicked="navButtonClicked"/>
-      </content-buttons>
+    <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
+
 
   </div>
 </template>
@@ -31,7 +32,6 @@ import TitleBar from "@/VueMarzipano/Components/TitleBar.vue";
 import AutoRotateButton from "@/VueMarzipano/Components/AutoRotateButton.vue";
 import Hotspot from "@/VueMarzipano/Components/Hotspot.vue";
 import ContentButtons from "@/VueMarzipano/Components/content-buttons.vue";
-import ZoomButton from "@/VueMarzipano/Components/ZoomButton.vue";
 import NavigateButton from "@/VueMarzipano/Components/NavigateButton.vue";
 
 const bowser = window.bowser;
@@ -138,8 +138,7 @@ function findSceneDataById(id) {
   return null;
 }
 
-function navButtonClicked()
-{
+function navButtonClicked() {
   enableAutoRotate.value = false
 }
 </script>

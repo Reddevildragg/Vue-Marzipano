@@ -1,6 +1,6 @@
 <template>
   <div class="control-buttons w-100 d-flex justify-content-center align-content-center">
-    <div class="button-layout d-flex justify-content-center align-content-center">
+    <div class="button-layout d-flex justify-content-center align-content-center" style="gap: 1rem">
       <slot></slot>
     </div>
   </div>
@@ -18,7 +18,7 @@
 
   .button-layout
   {
-    background-color: rgba(58,68,84,0.8);
+
   }
 }
 </style>

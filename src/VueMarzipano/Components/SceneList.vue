@@ -1,18 +1,20 @@
 <template>
-  <div class="sceneListToggle" @click="toggleSceneList">
-    <img v-if="isOpen" class="w-100 h-100 cursor-pointer" src="@/assets/img/expand.png">
-    <img v-else class="w-100 h-100 cursor-pointer" src="@/assets/img/collapse.png">
-  </div>
+  <div class="sceneListToggle cursor-pointer p-2" @click="toggleSceneList">
+    <img v-if="isOpen"  src="@/assets/img/street-view-solid.svg">
+    <img v-else src="@/assets/img/street-view-solid.svg">
 
-  <ul class="sceneList p-0" :class="{open : isOpen}">
-    <li v-for="item in data.scenes" :key="item.id" class="scene p-3 cursor-pointer d-flex align-content-center"
-        :data-id="item.id"
-        :class="{current : currentScene?.data.id === item.id}" @click="handleClick(item)">
-      <div class="text pe-5">{{ item.name }}</div>
-      <img v-if="currentScene?.data.id === item.id" class="align-self-center" style="height: 20px"
-           src="@/assets/img/eye-regular.svg"/>
-    </li>
-  </ul>
+
+    <ul class="sceneList p-0 m-0" :class="{open : isOpen}">
+      <li v-for="item in data.scenes" :key="item.id" class="scene p-3 cursor-pointer d-flex align-content-center"
+          :data-id="item.id"
+          :class="{current : currentScene?.data.id === item.id}" @click="handleClick(item)">
+        <div class="text pe-5">{{ item.name }}</div>
+        <img v-if="currentScene?.data.id === item.id" class="align-self-center" style="height: 20px"
+             src="@/assets/img/eye-regular.svg"/>
+      </li>
+    </ul>
+
+  </div>
 
 </template>
 
@@ -40,7 +42,7 @@ const offscreenPosition = computed(() =>
 {
   // Calculate the offscreen position dynamically based on content size
   const contentContainer = document.querySelector('.sceneList');
-  return `calc(-${contentContainer.offsetWidth}px - 50px)`;
+  return `calc(-${contentContainer.offsetWidth}px - 100px)`;
 })
 
 </script>
@@ -48,25 +50,26 @@ const offscreenPosition = computed(() =>
 <style scoped lang="scss">
 .sceneListToggle {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  padding: 5px;
-  background-color: rgb(103, 115, 131);
-  background-color: rgba(103, 115, 131, 0.8);
+  bottom: 10%;
+  left: 40px;
+  background-color:  rgba(25,45,56,0.8);
+
+  img
+  {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 .sceneList {
   z-index: 5;
   position: absolute;
-  top: 40px;
-  list-style: none; /* Remove numbers */
+  bottom: 100%;
   left: v-bind(offscreenPosition); /* Default value */
   transition: left 1s ease; /* Smooth transition when changing the left property */
 
   &.open {
-    left: 50px; /* Ending position at 50px from the left */
+    left: 0px; /* Ending position at 50px from the left */
   }
 
   .scene {

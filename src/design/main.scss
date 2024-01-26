@@ -1,5 +1,13 @@
 @import "text.scss";
+@import "../assets/Fonts/bienvenue/stylesheet.css";
+@import "../assets/Fonts/Gamechanger/stylesheet.css";
 
+:root
+{
+  @each $font, $value in $fonts {
+    --#{$font}: #{$value};
+  }
+}
 #app
 {
   height: 100vh;
