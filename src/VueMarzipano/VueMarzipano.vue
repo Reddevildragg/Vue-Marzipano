@@ -15,11 +15,11 @@
       <navigate-button class="p-2" :y-factor="10" imageName="assets/img/down.png" @nav-clicked="navButtonClicked"/>
 
       <auto-rotate-button class="p-2" :current-scene="currentScene"/>
+
+      <fullscreen-button class="p-2"/>
     </content-buttons>
 
     <scene-list :current-scene="currentScene" @select-scene="(x) => switchScene(findSceneById(x.id))"/>
-
-
   </div>
 </template>
 
@@ -33,6 +33,7 @@ import AutoRotateButton from "@/VueMarzipano/Components/AutoRotateButton.vue";
 import Hotspot from "@/VueMarzipano/Components/Hotspot.vue";
 import ContentButtons from "@/VueMarzipano/Components/content-buttons.vue";
 import NavigateButton from "@/VueMarzipano/Components/NavigateButton.vue";
+import FullscreenButton from "@/VueMarzipano/Components/FullscreenButton.vue";
 
 const bowser = window.bowser;
 
@@ -46,7 +47,7 @@ const autorotateSettings = Marzipano.autorotate({
 });
 
 
-let viewer = ref();
+const viewer = ref();
 const scenes = ref()
 const currentScene = ref();
 
@@ -54,11 +55,13 @@ provide("scenes", scenes);
 provide("data", data);
 provide("viewer", viewer);
 provide("currentScene", currentScene);
+provide("panoElement", panoElement);
 
 provide("enableAutoRotate", enableAutoRotate);
 provide("autorotateSettings", autorotateSettings);
 
 const allHotspots = ref([])
+
 
 onMounted(() => {
 
@@ -141,6 +144,7 @@ function findSceneDataById(id) {
 function navButtonClicked() {
   enableAutoRotate.value = false
 }
+
 </script>
 
 <style lang="scss">
