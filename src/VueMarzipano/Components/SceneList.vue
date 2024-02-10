@@ -42,7 +42,8 @@ const offscreenPosition = computed(() =>
 {
   // Calculate the offscreen position dynamically based on content size
   const contentContainer = document.querySelector('.sceneList');
-  return `calc(-${contentContainer.offsetWidth}px - 100px)`;
+  var computedStyle = window.getComputedStyle(document.querySelector('.sceneListToggle'));
+  return `calc(-${contentContainer.offsetWidth}px - ${computedStyle.getPropertyValue('left')})`;
 })
 
 </script>
