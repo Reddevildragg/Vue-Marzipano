@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import pano from './VueMarzipano/VueMarzipano.vue'
+import pano from './VueMarzipano/MarzipanoViewer.vue'
 </script>
 
 <style scoped>
