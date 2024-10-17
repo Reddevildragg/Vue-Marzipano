@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 import {inject} from "vue";
-import {useImages} from "@/VueMarzipano/Composables/ImagesComposable.ts";
+import {useImages} from "../Composables/ImagesComposable.ts";
 const emits = defineEmits(['nav-clicked'])
 
 const currentScene = inject('currentScene')

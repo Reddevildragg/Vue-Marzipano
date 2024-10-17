@@ -1,25 +1,28 @@
 <template>
-  <div class="hotspot" @click="handleClick">
-    <img class="w-100 h-100 cursor-pointer" src="@/assets/img/link.png">
-  </div>
+  <component
+      :is="getHotspotComponentName(hotspot)"
+      :id="hotspot.id"
+      :hotspot="hotspot" />
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import {defineProps, resolveComponent} from 'vue';
+import NavigationHotspot from "./NavigationHotspot.vue";
 
-const { text, onClick } = defineProps(['text', 'onClick']);
-
-const handleClick = () => {
-  // Call the parent component's click handler
-  onClick();
-};
+const { hotspot } = defineProps(['hotspot'])
+function getHotspotComponentName(hotspot)
+{
+  if(hotspot.type)
+  {
+    return resolveComponent(hotspot.type);
+  }
+  else
+  {
+    return NavigationHotspot
+  }
+}
 </script>
 
 <style scoped lang="scss">
-.hotspot {
-  width: 60px;
-  height: 60px;
-  margin-left: -30px;
-  margin-top: -30px;
-}
+
 </style>

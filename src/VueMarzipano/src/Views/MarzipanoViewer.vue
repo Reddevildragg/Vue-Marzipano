@@ -2,8 +2,7 @@
   <div ref="panoElement" class="pano">
     <TitleBar :current-scene="currentScene"/>
 
-    <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id"
-             @click="switchScene(findSceneById(hotspot.target))"/>
+    <Hotspot v-for="hotspot in allHotspots" :key="hotspot.id" :id="hotspot.id" :hotspot="hotspot" @click="switchScene(findSceneById(hotspot.target))"/>
 
     <content-buttons>
       <navigate-button class="p-2" :zoom-factor="0.8" imageName="assets/img/plus.png" @nav-clicked="navButtonClicked"/>
@@ -25,21 +24,26 @@
 
 <script setup>
 import Marzipano from "marzipano";
-import {data} from '../data';
 import {nextTick, onMounted, provide, ref} from "vue";
-import SceneList from "@/VueMarzipano/Components/SceneList.vue";
-import TitleBar from "@/VueMarzipano/Components/TitleBar.vue";
-import AutoRotateButton from "@/VueMarzipano/Components/AutoRotateButton.vue";
-import Hotspot from "@/VueMarzipano/Components/Hotspot.vue";
-import ContentButtons from "@/VueMarzipano/Components/content-buttons.vue";
-import NavigateButton from "@/VueMarzipano/Components/NavigateButton.vue";
-import FullscreenButton from "@/VueMarzipano/Components/FullscreenButton.vue";
+import SceneList from "../Components/SceneList.vue";
+import TitleBar from "../Components/TitleBar.vue";
+import AutoRotateButton from "../Components/AutoRotateButton.vue";
+import Hotspot from "../Components/Hotspot.vue";
+import ContentButtons from "../Components/content-buttons.vue";
+import NavigateButton from "../Components/NavigateButton.vue";
+import FullscreenButton from "../Components/FullscreenButton.vue";
+import {updateHotspots} from "../helpers";
 
 const bowser = window.bowser;
+const params = defineProps(
+    {
+      data: Object
+    }
+)
 
 const panoElement = ref();
 
-const enableAutoRotate = ref(data.settings.autorotateEnabled);
+const enableAutoRotate = ref(params.data.settings.autorotateEnabled);
 const autorotateSettings = Marzipano.autorotate({
   yawSpeed: 0.03,
   targetPitch: 0,
@@ -52,13 +56,16 @@ const scenes = ref()
 const currentScene = ref();
 
 provide("scenes", scenes);
-provide("data", data);
+provide("data", params.data);
 provide("viewer", viewer);
 provide("currentScene", currentScene);
 provide("panoElement", panoElement);
 
 provide("enableAutoRotate", enableAutoRotate);
 provide("autorotateSettings", autorotateSettings);
+
+provide('switchScene', switchScene) // Provide the switchScene function
+
 
 const allHotspots = ref([])
 
@@ -68,7 +75,7 @@ onMounted(() => {
 // Viewer options.
   const viewerOpts = {
     controls: {
-      mouseViewMode: data.settings.mouseViewMode,
+      mouseViewMode: params.data.settings.mouseViewMode,
       scrollZoom: true,
     }
   };
@@ -76,7 +83,7 @@ onMounted(() => {
 // Initialize viewer.
   const newViewer = new Marzipano.Viewer(panoElement.value, viewerOpts);
 // Create scenes.
-  scenes.value = data.scenes.map(function (sceneData) {
+  scenes.value = params.data.scenes.map(function (sceneData) {
     const urlPrefix = new URL("/tiles", import.meta.url.replace("/@fs", "")).toString();
     const source = Marzipano.ImageUrlSource.fromString(
         urlPrefix + "/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg",
@@ -95,13 +102,21 @@ onMounted(() => {
       pinFirstLevel: true,
     });
 
-    allHotspots.value.push(sceneData.linkHotspots);
-    allHotspots.value = allHotspots.value.flat();
+    sceneData.linkHotspots = updateHotspots(sceneData.linkHotspots)
+    sceneData.infoHotspots = updateHotspots(sceneData.infoHotspots)
+
+
+    allHotspots.value.push(...[...sceneData.linkHotspots, ...sceneData.infoHotspots])
 
     //wait for all the divs to load on the next tick
     nextTick(() => {
-      sceneData.linkHotspots.forEach(x => {
-        createdScene.hotspotContainer().createHotspot(document.getElementById(x.id), {yaw: 0.5, pitch: 0.5});
+      ;[...sceneData.linkHotspots, ...sceneData.infoHotspots].forEach((x) => {
+        createdScene
+            .hotspotContainer()
+            .createHotspot(document.getElementById(x.id), {
+              yaw: x.yaw,
+              pitch: x.pitch,
+            })
       })
     })
 
@@ -117,7 +132,13 @@ onMounted(() => {
   switchScene(scenes.value[0]);
 })
 
-function switchScene(scene) {
+function switchScene(scene)
+{
+  if(scene == null)
+  {
+    return;
+  }
+
   scene.view.setParameters(scene.data.initialViewParameters);
   scene.scene.switchTo();
   currentScene.value = scene;
@@ -133,9 +154,9 @@ function findSceneById(id) {
 }
 
 function findSceneDataById(id) {
-  for (let i = 0; i < data.scenes.length; i++) {
-    if (data.scenes[i].id === id) {
-      return data.scenes[i];
+  for (let i = 0; i < params.data.scenes.length; i++) {
+    if (params.data.scenes[i].id === id) {
+      return params.data.scenes[i];
     }
   }
   return null;
