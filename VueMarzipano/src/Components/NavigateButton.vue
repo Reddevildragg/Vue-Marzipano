@@ -1,6 +1,6 @@
 <template>
   <div class="navigationButton cursor-pointer" @click="navigate()">
-    <img :src="useImages().getImageSrc(props.imageName)">
+    <img :src="imageSrc" class="button-image">
   </div>
 </template>
 
@@ -28,9 +28,9 @@ const props = defineProps({
       },
 })
 
-import {inject} from "vue";
-import {useImages} from "../Composables/ImagesComposable.ts";
-const emits = defineEmits(['nav-clicked'])
+import {computed, inject} from "vue";
+import { useImages } from '../composables/ImagesComposable';
+const enableAutoRotate = inject('enableAutoRotate')
 
 const currentScene = inject('currentScene')
 
@@ -47,8 +47,12 @@ function navigate()
   currentScene.value.view.setYaw(targetYaw * Math.PI / 180);
   currentScene.value.view.setFov(currentFov * props.zoomFactor);
 
-  emits('nav-clicked')
+  enableAutoRotate.value = false
 }
+
+const { getImageSrc } = useImages();
+
+const imageSrc = computed(() => getImageSrc(props.imageName));
 
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="hotspot" @click="TriggerSceneSwitch">
-    <img class="w-100 h-100 cursor-pointer" src="@/assets/img/link.png">
+    <img class="w-100 h-100 cursor-pointer" src="../assets/link.png">
   </div>
 </template>
 
@@ -9,12 +9,12 @@ import {defineProps, inject} from "vue";
 
 const { hotspot } = defineProps(['hotspot'])
 const scenes: any = inject('scenes')
-const switchScene = inject('switchScene') // Inject the switchScene function
+const marzipanoViewFunctions = inject('marzipanoViewFunctions') // Inject the switchScene function
 
 // Switch to the selected scene
 function TriggerSceneSwitch()
 {
-  switchScene(findSceneById(hotspot.target));
+  marzipanoViewFunctions.switchScene(findSceneById(hotspot.target));
 }
 
 function findSceneById() {

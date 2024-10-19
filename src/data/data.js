@@ -68,8 +68,7 @@ export const data = {
                     "target": "0-image1"
                 }
             ],
-            "infoHotspots": [
-            ]
+            "infoHotspots": []
         }
     ],
     "name": "Project Title",
@@ -77,6 +76,13 @@ export const data = {
         "mouseViewMode": "drag",
         "autorotateEnabled": true,
         "fullscreenButton": true,
-        "viewControlButtons": true
+        "viewControlButtons": true,
+        "controlOptions":
+            {
+                "xJump": 10,
+                "yJump": 10,
+                "zoomInJump": 0.8,
+                "zoomOutJump": 1.2,
+            }
     }
 };

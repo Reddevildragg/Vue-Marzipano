@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@VueMarzipano': path.resolve(__dirname, './src/VueMarzipano/src'),
+      '@greener-games/vue-marzipano': path.resolve(__dirname, './VueMarzipano/dist'), // Point to the source directory
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
   },

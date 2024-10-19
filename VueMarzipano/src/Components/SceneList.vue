@@ -1,7 +1,7 @@
 <template>
   <div class="sceneListToggle cursor-pointer p-2" @click="toggleSceneList">
-    <img v-if="isOpen"  src="@/assets/img/street-view-solid.svg">
-    <img v-else src="@/assets/img/street-view-solid.svg">
+    <img v-if="isOpen" :src="getImageSrc('street-view-solid.svg')">
+    <img v-else :src="getImageSrc('street-view-solid.svg')">
 
 
     <ul class="sceneList p-0 m-0" :class="{open : isOpen}">
@@ -10,7 +10,7 @@
           :class="{current : currentScene?.data.id === item.id}" @click="handleClick(item)">
         <div class="text pe-5">{{ item.name }}</div>
         <img v-if="currentScene?.data.id === item.id" class="align-self-center" style="height: 20px"
-             src="@/assets/img/eye-regular.svg"/>
+             :src="getImageSrc('eye-regular.svg')"/>
       </li>
     </ul>
 
@@ -19,13 +19,15 @@
 </template>
 
 <script setup>
-import {data} from "@/data";
-import {computed, onMounted, onUnmounted, ref} from "vue";
+import {computed, inject, ref} from "vue";
+import {useImages} from "../Composables/ImagesComposable";
 
-const props = defineProps({
-  currentScene: Object,
-})
+const {getImageSrc} = useImages();
+
 const emits = defineEmits(['select-scene'])
+
+const currentScene = inject('currentScene')
+const data = inject('data')
 
 const isOpen = ref(false)
 
@@ -38,8 +40,7 @@ function toggleSceneList() {
   isOpen.value = !isOpen.value
 }
 
-const offscreenPosition = computed(() =>
-{
+const offscreenPosition = computed(() => {
   // Calculate the offscreen position dynamically based on content size
   const contentContainer = document.querySelector('.sceneList');
   var computedStyle = window.getComputedStyle(document.querySelector('.sceneListToggle'));
@@ -53,10 +54,9 @@ const offscreenPosition = computed(() =>
   position: absolute;
   bottom: 10%;
   left: 40px;
-  background-color:  rgba(25,45,56,0.8);
+  background-color: rgba(25, 45, 56, 0.8);
 
-  img
-  {
+  img {
     width: 35px;
     height: 35px;
   }

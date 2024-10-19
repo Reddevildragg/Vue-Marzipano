@@ -1,15 +1,17 @@
 <template>
   <a class="autorotateToggle cursor-pointer" @click="toggle">
-    <img v-if="!enableAutoRotate" src="@/assets/img/play.png">
-    <img v-else src="@/assets/img/pause.png">
+    <img v-if="!enableAutoRotate" :src="getImageSrc('play.png')">
+    <img v-else :src="getImageSrc('pause.png')">
   </a>
 </template>
 <script setup>
 import {inject, onMounted, ref, watch} from "vue";
+import {useImages} from "../Composables/ImagesComposable";
 
 const props = defineProps({
   currentScene: Object,
 })
+const { getImageSrc } = useImages();
 
 const viewer = inject('viewer')
 

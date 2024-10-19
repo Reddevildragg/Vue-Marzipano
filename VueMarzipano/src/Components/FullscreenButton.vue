@@ -1,15 +1,18 @@
 <template>
   <div class="navigationButton cursor-pointer" @click="toggle()">
-    <img src="@/assets/img/fullscreen.png">
+    <img :src="getImageSrc('fullscreen.png')">
   </div>
 </template>
 
 <script setup lang="ts">
 import { useFullscreen } from '@vueuse/core'
 import {inject} from "vue";
+import {useImages} from "../Composables/ImagesComposable.ts";
 
 const panoElement = inject('panoElement')
 const { toggle } = useFullscreen(panoElement)
+
+const {getImageSrc  } = useImages();
 
 </script>
 
