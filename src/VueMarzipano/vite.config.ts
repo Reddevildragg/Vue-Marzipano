@@ -1,26 +1,24 @@
-// packages/vue-git-hub-browser/vite.config.ts
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
+import path from 'path';
+import dts from "vite-plugin-dts";
 
+// Export the Vite configuration
 export default defineConfig({
-  plugins: [vue()],
-  build: {
-    lib: {
-      entry: 'src/index.ts',
-      name: 'VueMarzipano',
-      fileName: (format) => `vue-marzipano.${format}.js`,
-    },
-    rollupOptions: {
-      external: ['vue'],
-      output: {
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') return 'vue-marzipano.scss';
-          return assetInfo.name;
+    plugins: [vue(), dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, 'src/index.ts'), // Main entry point for the plugin
+            name: '@greener-games/vue-marzipano', // Global variable name
+            fileName: (format) => `vue-marzipano.${format}.js`, // Output file names
         },
-        globals: {
-          vue: 'Vue'
-        }
-      },
-    }
-  }
+        rollupOptions: {
+            external: ["vue"],
+            output: {
+                globals: {
+                    vue: "Vue",
+                },
+            },
+        },
+    },
 });

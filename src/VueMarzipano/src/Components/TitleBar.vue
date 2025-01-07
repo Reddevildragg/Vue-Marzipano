@@ -1,12 +1,11 @@
 <template>
-  <div class="titleBar d-flex justify-content-center align-items-center">
-    <h1 class="sceneName m-0 font-gamechanger">{{sanitize(currentScene?.data.name)}}</h1>
+  <div class="titleBar ">
+    <h1 class="sceneName">{{ sanitize(currentScene?.data.name) }}</h1>
   </div>
 </template>
 <script setup>
-const props = defineProps({
-  currentScene: Object,
-})
+import {inject} from "vue";
+const currentScene = inject('currentScene')
 
 function sanitize(s) {
   return s?.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
@@ -14,23 +13,24 @@ function sanitize(s) {
 </script>
 
 <style>
-h1
-{
-  font-size: 24px!important;
+h1 {
+  font-size: 24px !important;
 }
-.titleBar
-{
+
+.titleBar {
   z-index: 10;
   position: absolute;
   top: 0;
   height: 40px;
   width: 100%;
   text-align: center;
-  background-color:  rgba(25,45,56,0.8);
+  background-color: rgba(25, 45, 56, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.sceneName
-{
+.sceneName {
   color: white;
 }
 </style>

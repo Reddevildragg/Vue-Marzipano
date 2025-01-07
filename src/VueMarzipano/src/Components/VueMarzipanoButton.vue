@@ -1,23 +1,19 @@
 <template>
-  <div :id="hotspotInfo?.id">
-    <component
-        :is="hotspotType"
-        :hotspot="hotspotInfo"/>
-  </div>
-
+  <component :is="buttonType" :buttonData="buttonData"/>
 </template>
 
 <script setup lang="ts">
 import {computed, defineAsyncComponent, defineProps, resolveComponent} from 'vue';
-import NavigationHotspot from "./NavigationHotspot.vue";
+import NavigateButton from "./NavigateButton.vue";
 
 const props = defineProps({
-  hotspotInfo: Object,
+  buttonData: Object,
 })
-const hotspotType = computed(() => {
-      const type = props.hotspotInfo?.type;
 
+const buttonType = computed(() => {
+      const type = props.buttonData?.type;
       let component;
+
       if (type) {
         component = resolveComponent(type);
 
@@ -25,16 +21,17 @@ const hotspotType = computed(() => {
         if (component === null || component === undefined || typeof component === 'string') {
           component = defineAsyncComponent({
             loader: () => import(`./${type}.vue`),
-            loadingComponent: NavigationHotspot,
-            errorComponent: NavigationHotspot,
+            loadingComponent: NavigateButton,
+            errorComponent: NavigateButton,
           })
         }
       }
-      return component && typeof component !== 'string' ? component : NavigationHotspot;
+
+      return component && typeof component !== 'string' ? component : NavigateButton;
     }
 )
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 
 </style>

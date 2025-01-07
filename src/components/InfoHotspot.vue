@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
-const { hotspot } = defineProps({
+const props = defineProps({
   hotspot: {
     type: Object,
     required: true

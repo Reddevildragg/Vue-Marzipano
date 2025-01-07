@@ -30,3 +30,4 @@ storybook-static
 Package/template
 Package/node_modules
 .sharepoint/private.json
+src/VueMarzipano/dist

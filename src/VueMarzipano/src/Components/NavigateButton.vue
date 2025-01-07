@@ -1,65 +1,48 @@
 <template>
   <div class="navigationButton cursor-pointer" @click="navigate()">
-    <img :src="useImages().getImageSrc(props.imageName)">
+    <img :src="imageSrc" alt="">
   </div>
 </template>
 
 <script setup lang="ts">
 
+import {GetImage} from "../helpers.ts";
+
 const props = defineProps({
-  imageName:
-      {
-        type:String
-      },
-  xFactor:
-      {
-        default: 0,
-        type: Number
-      },
-  yFactor:
-      {
-        default: 0,
-        type: Number
-      },
-  zoomFactor:
-      {
-        default: 1,
-        type: Number
-      },
+  buttonData : Object,
 })
 
-import {inject} from "vue";
-import {useImages} from "../Composables/ImagesComposable.ts";
-const emits = defineEmits(['nav-clicked'])
+import {computed, inject} from "vue";
+
+const enableAutoRotate = inject('enableAutoRotate')
 
 const currentScene = inject('currentScene')
 
-function navigate()
-{
+const imageSrc = computed(() =>  GetImage(props.buttonData.imageName))
+
+function navigate() {
   const currentPitch = currentScene.value.view.pitch() * 180 / Math.PI;
   const currentYaw = currentScene.value.view.yaw() * 180 / Math.PI;
   const currentFov = currentScene.value.view.fov();
 
-  const targetPitch = currentPitch + props.yFactor;
-  const targetYaw = currentYaw + props.xFactor;
+  if(props.buttonData.yFactor) {
+    const targetPitch = currentPitch + props.buttonData.yFactor;
+    currentScene.value.view.setPitch(targetPitch * Math.PI / 180);
+  }
 
-  currentScene.value.view.setPitch(targetPitch * Math.PI / 180);
-  currentScene.value.view.setYaw(targetYaw * Math.PI / 180);
-  currentScene.value.view.setFov(currentFov * props.zoomFactor);
+  if(props.buttonData.xFactor) {
+    const targetYaw = currentYaw + props.buttonData.xFactor
+    currentScene.value.view.setYaw(targetYaw * Math.PI / 180);
+  }
 
-  emits('nav-clicked')
+  if(props.buttonData.zoomFactor) {
+    currentScene.value.view.setFov(currentFov * props.buttonData.zoomFactor);
+  }
+
+  enableAutoRotate.value = false
 }
 
 </script>
 
 <style scoped>
-.navigationButton
-{
-  background-color:  rgba(25,45,56,0.8);
-  img
-  {
-    width: 35px;
-    height: 35px;
-  }
-}
 </style>

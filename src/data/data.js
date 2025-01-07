@@ -1,4 +1,11 @@
 export const data = {
+    "name": "Project Title",
+    "cloud":
+        {
+            enabled: false,
+            url: 'https://360imagegallery.file.core.windows.net/tiles/neom',
+            key:"VITE_APP_CLOUD_KEY"
+        },
     "scenes": [
         {
             "id": "0-image1",
@@ -68,15 +75,28 @@ export const data = {
                     "target": "0-image1"
                 }
             ],
-            "infoHotspots": [
-            ]
+            "infoHotspots": []
         }
     ],
-    "name": "Project Title",
     "settings": {
         "mouseViewMode": "drag",
         "autorotateEnabled": true,
         "fullscreenButton": true,
-        "viewControlButtons": true
-    }
+        "viewControlButtons": true,
+        "navigationButtons":
+            [
+                {type: "AutoRotateButton", imageOn: "assets/img/play.png", imageOff: "assets/img/pause.png"},
+                {type: "FullScreenButton", imageName: "assets/img/fullscreen.png"},
+                {type: "NavigateButton", zoomFactor: 0.8, imageName: "assets/img/plus.png"},
+                {type: "NavigateButton", zoomFactor: 1.2, imageName: "assets/img/minus.png"},
+                {type: "NavigateButton", xFactor: -10, imageName: "assets/img/left.png"},
+                {type: "NavigateButton", xFactor: 10, imageName: "assets/img/right.png"},
+                {type: "NavigateButton", yFactor: -10, imageName: "assets/img/up.png"},
+                {type: "NavigateButton", yFactor: 10, imageName: "assets/img/down.png"}
+            ]
+    },
+    "icons":
+        {
+            "defaultNavigationIcon": "/assets/img/link.png",
+        }
 };

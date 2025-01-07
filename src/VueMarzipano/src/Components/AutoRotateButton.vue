@@ -1,17 +1,22 @@
 <template>
-  <a class="autorotateToggle cursor-pointer" @click="toggle">
-    <img v-if="!enableAutoRotate" src="@/assets/img/play.png">
-    <img v-else src="@/assets/img/pause.png">
-  </a>
+  <div class="autorotateToggle cursor-pointer" @click="toggle">
+    <img v-if="!enableAutoRotate" :src=imageSrcOff alt="">
+    <img v-else :src=imageSrcOn alt="">
+  </div>
 </template>
 <script setup>
-import {inject, onMounted, ref, watch} from "vue";
+import {computed, inject, onMounted, ref, watch} from "vue";
+import {GetImage} from "../helpers";
 
 const props = defineProps({
-  currentScene: Object,
+  buttonData : Object,
 })
 
+const imageSrcOn = computed(() =>  GetImage(props.buttonData?.imageOn))
+const imageSrcOff = computed(() =>  GetImage(props.buttonData?.imageOff))
+
 const viewer = inject('viewer')
+const currentScene = inject('currentScene')
 
 const enableAutoRotate = inject('enableAutoRotate')
 const autorotateSettings = inject('autorotateSettings')
@@ -52,7 +57,7 @@ watch(() => enableAutoRotate.value, (newVal, oldVal) => {
 Set(enableAutoRotate.value)
 });
 
-watch(() => props.currentScene, (newVal, oldVal) => {
+watch(() => currentScene.value, (newVal, oldVal) => {
   stopAutorotate()
   startAutorotate()
 });
@@ -74,13 +79,4 @@ function stopAutorotate() {
 </script>
 
 <style>
-.autorotateToggle
-{
-  background-color:  rgba(25,45,56,0.8);
-  img
-  {
-    width: 35px;
-    height: 35px;
-  }
-}
 </style>
