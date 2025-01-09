@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import pano from '@VueMarzipano/Views/MarzipanoViewer.vue'
+import pano from '@greener-games/vue-marzipano/Views/MarzipanoViewer.vue'
 import {onMounted, ref} from "vue";
 import {data as localData} from '@/data/data';
-import {findEnvVariableByKey} from "@VueMarzipano/helpers.ts";
+import {findEnvVariableByKey} from "@greener-games/vue-marzipano/helpers.ts";
 
 const marzipanoViewer = ref(null);
 const fetchedData = ref(null);

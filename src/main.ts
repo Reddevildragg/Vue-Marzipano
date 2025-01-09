@@ -2,8 +2,8 @@ import {createApp} from 'vue'
 import './design/main.scss'
 import App from './App.vue'
 
-import VueMarzipano from "@VueMarzipano/index.ts";
-import "@VueMarzipano/style.scss";
+import VueMarzipano from "@greener-games/vue-marzipano/index.ts";
+import "@greener-games/vue-marzipano/style.scss";
 
 import InfoHotspot from "./components/InfoHotspot.vue";
 
