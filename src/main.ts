@@ -10,5 +10,7 @@ import InfoHotspot from "./components/InfoHotspot.vue";
 const app = createApp(App)
 
 app.component('InfoHotspot', InfoHotspot);
-app.use(VueMarzipano)
+app.use(VueMarzipano, {
+    env: import.meta.env
+});
 app.mount('#app')

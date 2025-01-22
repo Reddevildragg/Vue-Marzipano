@@ -1,7 +1,6 @@
 <template>
   <div class="content">
-    <pano ref="marzipanoViewer" v-if="fetchedData" :data="fetchedData">
-    </pano>
+    <pano ref="marzipanoViewer" v-if="fetchedData" :data="fetchedData"/>
   </div>
 
   <button class="new-toggle" @click="toggleAutoRotate">Toggle Auto Rotate</button>
