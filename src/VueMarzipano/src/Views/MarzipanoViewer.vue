@@ -8,7 +8,7 @@
     <slot name="contentButtons">
       <div class="control-buttons">
         <div class="button-layout" style="gap: 1rem">
-          <vue-marzipano-button v-for="button in navigationButtons" :key="button" class="marzipano-button" :buttonData="button"/>
+          <vue-marzipano-button v-for="button in navigationButtons" :key="button.type + (button.imageName || '')" class="marzipano-button" :buttonData="button"/>
         </div>
       </div>
     </slot>
@@ -18,27 +18,41 @@
   </div>
 </template>
 
-<script setup>
-import Marzipano from "marzipano";
-import {computed, defineExpose, nextTick, onMounted, provide, ref} from "vue";
+<script setup lang="ts">
+import {computed, defineExpose, onMounted, onUnmounted, provide} from "vue";
+import type { PropType } from "vue";
 import SceneList from "../Components/SceneList.vue";
 import TitleBar from "../Components/TitleBar.vue";
 import Hotspot from "../Components/Hotspot.vue";
-import {findEnvVariableByKey, updateHotspots} from "../helpers";
 import VueMarzipanoButton from "../Components/VueMarzipanoButton.vue";
+import { useMarzipano } from "../composables/useMarzipano";
+import type { MarzipanoData } from "../types";
 
-const {data} = defineProps({data: Object});
-const panoElement = ref();
-const enableAutoRotate = ref(data.settings.autorotateEnabled);
-const autorotateSettings = Marzipano.autorotate({yawSpeed: 0.03, targetPitch: 0, targetFov: Math.PI / 2});
-const viewer = ref();
-const scenes = ref([]);
-const currentScene = ref();
-const allHotspots = ref([]);
+const props = defineProps({
+    data: {
+        type: Object as PropType<MarzipanoData>,
+        required: true
+    }
+});
+
+const {
+  panoElement,
+  viewer,
+  scenes,
+  currentScene,
+  allHotspots,
+  enableAutoRotate,
+  autorotateSettings,
+  initMarzipano,
+  switchScene,
+  findSceneById,
+  findSceneDataById,
+  destroyMarzipano
+} = useMarzipano();
 
 provide("scenes", scenes);
 provide("viewer", viewer);
-provide("data", data);
+provide("data", props.data);
 provide("currentScene", currentScene);
 provide("panoElement", panoElement);
 provide("enableAutoRotate", enableAutoRotate);
@@ -47,60 +61,17 @@ provide("marzipanoViewFunctions", {switchScene});
 
 defineExpose({enableAutoRotate, switchScene, findSceneById, findSceneDataById});
 
-const navigationButtons = computed(() => data.settings.navigationButtons)
+const navigationButtons = computed(() => props.data.settings.navigationButtons)
 
 onMounted(() => {
-  const viewerOpts = {controls: {mouseViewMode: data.settings.mouseViewMode, scrollZoom: true}};
-  const newViewer = new Marzipano.Viewer(panoElement.value, viewerOpts);
-
-  scenes.value = data.scenes.map(sceneData => {
-    let urlPrefix;
-    let source
-    if (data?.cloud?.enabled) {
-      urlPrefix = data.cloud.url;
-      source = Marzipano.ImageUrlSource.fromString(`${urlPrefix}/${sceneData.id}/{z}/{f}/{y}/{x}.jpg?${findEnvVariableByKey(data.cloud.key)}`, {cubeMapPreviewUrl: `${urlPrefix}/${sceneData.id}/preview.jpg?${findEnvVariableByKey(data.cloud.key)}`});
-    } else {
-      urlPrefix = new URL("/tiles", import.meta.url.replace("/@fs", "")).toString();
-      source = Marzipano.ImageUrlSource.fromString(`${urlPrefix}/${sceneData.id}/{z}/{f}/{y}/{x}.jpg`, {cubeMapPreviewUrl: `${urlPrefix}/${sceneData.id}/preview.jpg`});
-    }
-
-    const geometry = new Marzipano.CubeGeometry(sceneData.levels);
-    const limiter = Marzipano.RectilinearView.limit.traditional(Math.min(sceneData.faceSize * 8, 4096), 100 * Math.PI / 180, 120 * Math.PI / 180);
-    const view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
-    const createdScene = newViewer.createScene({source, geometry, view, pinFirstLevel: true});
-
-    sceneData.linkHotspots = updateHotspots(sceneData.linkHotspots);
-    sceneData.infoHotspots = updateHotspots(sceneData.infoHotspots);
-    allHotspots.value.push(...sceneData.linkHotspots, ...sceneData.infoHotspots);
-
-    nextTick(() => {
-      [...sceneData.linkHotspots, ...sceneData.infoHotspots].forEach(x => {
-        createdScene.hotspotContainer().createHotspot(document.getElementById(x.id), {yaw: x.yaw, pitch: x.pitch});
-      });
-    });
-
-    return {data: sceneData, scene: createdScene, view};
-  });
-
-  viewer.value = newViewer;
-  switchScene(scenes.value[0]);
+  if (panoElement.value) {
+    initMarzipano(panoElement.value, props.data);
+  }
 });
 
-function switchScene(scene) {
-  if (!scene) return;
-  scene.view.setParameters(scene.data.initialViewParameters);
-  scene.scene.switchTo();
-  currentScene.value = scene;
-}
-
-function findSceneById(id) {
-  return scenes.value.find(scene => scene.data.id === id) || null;
-}
-
-function findSceneDataById(id) {
-  return data.scenes.find(scene => scene.id === id) || null;
-}
-
+onUnmounted(() => {
+    destroyMarzipano();
+});
 </script>
 
 <style lang="scss">
